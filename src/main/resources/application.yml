@@ -1,0 +1,27 @@
+spring:
+  thymeleaf:
+    enabled: true
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+  mvc:
+    static-path-pattern: /**
+    servlet:
+      path: /
+
+  datasource:
+    url: jdbc:mariadb://shopping-mall.c197xgtjr5yn.ap-northeast-2.rds.amazonaws.com:3306/shop?characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: admin
+    password:
+
+  mybatis:
+    mapper-locations: classpath:/mappers/**/*.xml
+    type-aliases-package: com.hy.shop
+
+devtools:
+  livereload:
+    enabled: true
+  restart:
+    enabled: false

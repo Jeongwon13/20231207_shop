@@ -1,0 +1,58 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* 최소 높이를 화면 높이로 설정 */
+}
+
+.container {
+    max-width: 400px;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+input, button {
+    flex: 1; /* 동적으로 조절되는 너비 */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+input::placeholder {
+    color: #888;
+}
+
+button {
+    background-color: #fd4646;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #fa3636;
+}
+
