@@ -4,22 +4,20 @@ import com.hy.shop.member.model.service.MemberService;
 import com.hy.shop.member.model.vo.Member;
 import jakarta.servlet.http.HttpServletRequest;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+@RequiredArgsConstructor
 @RequestMapping("/member")
 @Controller
 public class MemberController {
     private static Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     private final MemberService memberService;
-
-    // 생성자 주입
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @GetMapping("/login")
     public String login() {

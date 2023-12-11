@@ -14,6 +14,8 @@
 </head>
 
 <body>
+
+
 <div th:replace="common/header :: HeaderFragment"></div>
 
     <div class="white-divider"></div>
@@ -94,7 +96,14 @@
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="/js/main.js"></script>
 
-    
+    <script th:if="${message}">
+        <![CDATA[
+        window.onload = function() {
+            alert("[[${message}]]");
+        };
+        ]]>
+    </script>
+
     </body>
 
 </html>
