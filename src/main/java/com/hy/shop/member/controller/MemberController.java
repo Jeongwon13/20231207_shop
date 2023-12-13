@@ -34,15 +34,8 @@ public class MemberController {
         return "member/signup";
     }
 
-
-
-
-
-
-
     @PostMapping("/signup")
     public String signup(@ModelAttribute Member member, @RequestParam(name = "address") String[] address, RedirectAttributes redirect, HttpServletRequest request) {
-
         String joinedAddress = (address != null) ? String.join(",,", address) : "";
 
         Member insertMember = Member.builder()
@@ -58,27 +51,32 @@ public class MemberController {
 
         logger.info("MEMBER의 값info?: " + insertMember.getMemberId());
 
-        int result = memberService.signup(insertMember);
+        boolean isSmsVerified = true; // 실제로는 SMS 인증 여부에 따라 처리하도록 변경
+        if(isSmsVerified) {
+            // SMS 인증 성공한 경우에만 회원가입 처리 진행
+            int result = memberService.signup(insertMember);
 
-        logger.info("result 값info?: " + result);
+            logger.info("result 값info?: " + result);
 
-        String message = "";
-        String path = "";
+            String message = "";
+            String path = "";
 
-        if (result > 0) {
-            message = "hy의 가족이 되신 것을 환영합니다.";
-            path = "redirect:/";
+            if (result > 0) {
+                message = "hy의 가족이 되신 것을 환영합니다.";
+                path = "redirect:/";
+            } else {
+                message = "회원가입에 실패하였습니다. 다시 시도해주세요.";
+                path = "redirect:/member/signup";
+            }
+
+            redirect.addFlashAttribute("message", message);
+
+            return path;
         } else {
-            message = "회원가입에 실패하였습니다. 다시 시도해주세요.";
-            path = "redirect:/member/signup";
+            // SMS 인증 실패한 경우
+            redirect.addFlashAttribute("message", "SMS 인증을 먼저 완료해주세요.");
+            return "redirect:/member/signup";
         }
-
-        redirect.addFlashAttribute("message", message);
-
-        return path;
     }
 
-
-
 }
-
