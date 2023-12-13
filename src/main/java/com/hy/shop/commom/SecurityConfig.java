@@ -39,7 +39,7 @@ public class SecurityConfig {
         public void configure(HttpSecurity http) throws Exception {
             http.csrf().disable()
                     .authorizeRequests(authorizeRequests -> authorizeRequests
-                            .antMatchers("/user/**").authenticated()
+                           ddd .antMatchers("/user/**").authenticated()
                             .antMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
                             .antMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().permitAll()
