@@ -44,7 +44,7 @@ public class SecurityConfig {
                             .antMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().permitAll()
                     ).formLogin().loginPage("/login")
-                    .and()
+                    .and()dd
                     .userDetailsService(userDetailsService)
                     .passwordEncoder(passwordEncoder());
         }
