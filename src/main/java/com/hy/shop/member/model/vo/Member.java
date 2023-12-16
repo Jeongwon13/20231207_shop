@@ -1,24 +1,22 @@
 package com.hy.shop.member.model.vo;
 
-import com.hy.shop.commom.util.SHA256;
 import lombok.Builder;
 import lombok.Getter;
-
+import org.apache.ibatis.type.Alias;
 @Getter
 @Builder
+@Alias("Member")
 public class Member {
-    private final Long memberNo;
-    private final String memberId;
-    private final String memberPw;
-    private final String memberEmail;
-    private final String memberName;
-    private final String memberNickname;
-    private final String memberPhone;
-    private final String memberBirth;
-    private final String address;
-    private final String salt;
+    private Long memberNo;
+    private String memberId;
+    private String memberPw;
+    private String memberEmail;
+    private String memberName;
+    private String memberNickname;
+    private String memberPhone;
+    private String memberBirth;
+    private String address;
+    private String salt;
 
-    public static MemberBuilder builderWithPassword(String password) {
-        return new MemberBuilder().memberPw(SHA256.getEncrypt(password, SHA256.generateSalt()));
-    }
+
 }

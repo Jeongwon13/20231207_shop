@@ -3,19 +3,45 @@
 <mapper namespace="com.hy.shop.member.model.dao.MemberMapper">
 
     <!-- 기존에 있던 insert 구문 -->
-    <insert id="signup" parameterType="com.hy.shop.member.model.vo.Member">
+    <insert id="signup" parameterType="Member">
         INSERT INTO MEMBER (
-            MEMBER_NO, MEMBER_ID, MEMBER_PW, MEMBER_EMAIL, MEMBER_NAME, MEMBER_NICKNAME,
-            MEMBER_PHONE, ADDRESS, MEMBER_BIRTH
+              MEMBER_ID
+            , MEMBER_PW
+            , MEMBER_EMAIL
+            , MEMBER_NAME
+            , MEMBER_NICKNAME
+            , MEMBER_PHONE
+            , ADDRESS
+            , MEMBER_BIRTH
+            , SALT
         ) VALUES (
-                     NULL, #{memberId}, #{memberPw}, #{memberEmail}, #{memberName}, #{memberNickname},
-                     #{memberPhone}, #{address}, #{memberBirth}
-                 )
+              #{memberId}
+            , #{memberPw}
+            , #{memberEmail}
+            , #{memberName}
+            , #{memberNickname}
+            , #{memberPhone}
+            , #{address}
+            , #{memberBirth}
+            , #{salt}
+        )
     </insert>
 
-
-    <select id="findUser" parameterType="com.hy.shop.member.model.vo.Account" resultType="com.hy.shop.member.model.vo.Account">
-        SELECT * FROM MEMBER WHERE MEMBER_ID = #{id}
+    <select id="login" parameterType="Member" resultType="Member">
+        SELECT
+            MEMBER_NO
+            , MEMBER_ID
+            , MEMBER_PW
+            , MEMBER_EMAIL
+            , MEMBER_NAME
+            , MEMBER_NICKNAME
+            , MEMBER_PHONE
+            , ADDRESS
+            , MEMBER_BIRTH
+            , SALT
+        FROM MEMBER
+        WHERE 1=1
+          AND MEMBER_ID = #{memberId}
     </select>
 
 </mapper>
