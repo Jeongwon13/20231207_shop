@@ -31,6 +31,12 @@
     <div class="signup-link">
         <p>계정이 없으신가요? <a href="/member/signupAgree">회원가입</a></p>
     </div>
+    <div>
+        <a th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${kakao.apiKey}, redirect_uri=${kakao.redirectUri}, response_type='code')}">
+            <img src="/images/login/kakao_login_small.png">
+        </a>
+    </div>
+
 </div>
 <script th:if="${not #strings.isEmpty(message)}">
     alert("[[ ${message} ]]");

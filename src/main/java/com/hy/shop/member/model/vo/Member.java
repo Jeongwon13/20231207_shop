@@ -3,6 +3,7 @@ package com.hy.shop.member.model.vo;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.ibatis.type.Alias;
+
 @Getter
 @Builder
 @Alias("Member")
@@ -17,6 +18,5 @@ public class Member {
     private String memberBirth;
     private String address;
     private String salt;
-
 
 }

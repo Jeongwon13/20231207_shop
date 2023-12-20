@@ -1,7 +1,10 @@
 package com.hy.shop.member.controller;
 
+import com.hy.shop.commom.config.KakaoProperties;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import com.hy.shop.member.model.service.MemberService;
 import com.hy.shop.member.model.vo.Member;
@@ -15,12 +18,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Log
 @SessionAttributes({"loginMember"})
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @Controller
 public class MemberController {
     private static Logger logger = LoggerFactory.getLogger(MemberController.class);
+
+    private final KakaoProperties kakaoProperties;
 
     private final MemberService memberService;
 
@@ -37,6 +43,7 @@ public class MemberController {
                 }
             }
         }
+        model.addAttribute("kakao", kakaoProperties);
         return "member/login";
     }
 
@@ -65,14 +72,13 @@ public class MemberController {
                 .address(joinedAddress)
                 .build();
 
-        logger.info("MEMBER의 값info?: " + insertMember.getMemberId());
+        log.info("MEMBER의 값info?: " + insertMember.getMemberId());
 
-        boolean isSmsVerified = true; // 실제로는 SMS 인증 여부에 따라 처리하도록 변경
+        boolean isSmsVerified = true;
         if(isSmsVerified) {
-            // SMS 인증 성공한 경우에만 회원가입 처리 진행
             int result = memberService.signup(insertMember);
 
-            logger.info("result 값info?: " + result);
+            log.info("result 값info?: " + result);
 
             String message = "";
             String path = "";
@@ -89,11 +95,12 @@ public class MemberController {
 
             return path;
         } else {
-            // SMS 인증 실패한 경우
             redirect.addFlashAttribute("message", "SMS 인증을 먼저 완료해주세요.");
             return "redirect:/member/signup";
         }
     }
+
+
 
     @PostMapping("/login")
     public String login(@ModelAttribute Member inputMember, Model model, RedirectAttributes redirect,
@@ -121,14 +128,10 @@ public class MemberController {
         } else {
             redirect.addFlashAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
 
-            // 로그인 실패 시 null 체크 추가
-            logger.info("로그인 실패");
-            System.out.println("ddddddddddddddddd"+inputMember.getMemberId());
-            System.out.println("rrrrrrrrrrrrrrrrr"+inputMember.getMemberPw());
+            logger.info("로그인 실패 {}", inputMember.getMemberId());
             return "redirect:/member/login";
         }
     }
-
 
 
 }
