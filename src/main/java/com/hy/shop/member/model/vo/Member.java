@@ -18,5 +18,9 @@ public class Member {
     private String memberBirth;
     private String address;
     private String salt;
-
+    private String socialType;
+    private String withdrawalFlag;
 }
+
+
+

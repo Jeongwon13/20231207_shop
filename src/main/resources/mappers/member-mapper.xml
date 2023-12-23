@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hy.shop.member.model.dao.MemberMapper">
 
+
     <insert id="signup" parameterType="Member">
         INSERT INTO MEMBER (
               MEMBER_ID
@@ -42,5 +43,30 @@
         WHERE 1=1
           AND MEMBER_ID = #{memberId}
     </select>
+
+    <select id="findKakao" parameterType="java.util.HashMap" resultType="Member">
+        SELECT *
+        FROM MEMBER
+        WHERE 1=1
+        AND MEMBER_EMAIL = #{email}
+        AND MEMBER_NICKNAME = #{nickname}
+        LIMIT 1
+    </select>
+
+
+    <insert id="insertKakao" parameterType="java.util.HashMap">
+        INSERT INTO MEMBER(
+            MEMBER_EMAIL,
+            MEMBER_NICKNAME,
+            SOCIAL_TYPE
+        ) VALUES (
+            #{email},
+            #{nickname},
+            'KP'
+        )
+    </insert>
+
+
+
 
 </mapper>

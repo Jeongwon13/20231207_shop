@@ -4,6 +4,7 @@ import com.hy.shop.commom.config.KakaoProperties;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import com.hy.shop.member.model.service.MemberService;
@@ -18,7 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Log
+import java.util.ArrayList;
+import java.util.Map;
+
+@Slf4j
 @SessionAttributes({"loginMember"})
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -31,7 +35,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public String login(Model model, HttpSession session,HttpServletRequest request) {
+    public String login(Model model, HttpSession session, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -75,7 +79,7 @@ public class MemberController {
         log.info("MEMBER의 값info?: " + insertMember.getMemberId());
 
         boolean isSmsVerified = true;
-        if(isSmsVerified) {
+        if (isSmsVerified) {
             int result = memberService.signup(insertMember);
 
             log.info("result 값info?: " + result);
@@ -101,10 +105,9 @@ public class MemberController {
     }
 
 
-
     @PostMapping("/login")
     public String login(@ModelAttribute Member inputMember, Model model, RedirectAttributes redirect,
-                        HttpServletRequest req, HttpServletResponse resp, @RequestParam(name="remember", required=false) String remember) {
+                        HttpServletRequest req, HttpServletResponse resp, @RequestParam(name = "remember", required = false) String remember) {
         Member loginMember = memberService.login(inputMember);
 
         if (loginMember != null) {
@@ -124,7 +127,7 @@ public class MemberController {
                 cookie.setPath(req.getContextPath() + "/member/login");
                 resp.addCookie(cookie);
             }
-                return "redirect:/";
+            return "redirect:/";
         } else {
             redirect.addFlashAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
 
@@ -133,5 +136,32 @@ public class MemberController {
         }
     }
 
+    @RequestMapping(value = "/oauth")
+    public String kakaoLogin(@RequestParam(value = "code", required = false) String code, RedirectAttributes redirect, HttpSession session) throws Exception {
+        System.out.println("####### " + code);
+
+        String access_Token = memberService.getAccessToken(code);
+        Member userInfo = memberService.getUserInfo(access_Token);
+
+
+        System.out.println("###access_Token#### : " + access_Token);
+        log.info("userInfo:::: {} ", userInfo);
+
+        session.setAttribute("userInfo", userInfo);
+        String message = "";
+        String path = "";
+
+        if(userInfo != null) {
+            message = userInfo.getMemberNickname()+"님 환영합니다.";
+            path = "redirect:/";
+        } else {
+            message = "";
+            path = "redirect:/member/login";
+        }
+
+        redirect.addFlashAttribute("message", message);
+
+        return path;
+    }
 
 }
