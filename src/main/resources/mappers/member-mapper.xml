@@ -50,7 +50,7 @@
         WHERE 1=1
         AND MEMBER_EMAIL = #{email}
         AND MEMBER_NICKNAME = #{nickname}
-        LIMIT 1
+        AND SOCIAL_TYPE = 'KP'
     </select>
 
 
@@ -66,7 +66,26 @@
         )
     </insert>
 
+    <select id="findNaver" parameterType="java.util.HashMap" resultType="Member">
+        SELECT *
+        FROM MEMBER
+        WHERE 1=1
+          AND MEMBER_EMAIL = #{email}
+          AND MEMBER_NICKNAME = #{nickname}
+          AND SOCIAL_TYPE = 'NV'
+    </select>
 
 
+    <insert id="insertNaver" parameterType="java.util.HashMap">
+        INSERT INTO MEMBER(
+            MEMBER_EMAIL,
+            MEMBER_NICKNAME,
+            SOCIAL_TYPE
+        ) VALUES (
+            #{email},
+            #{nickname},
+            'NV'
+        )
+    </insert>
 
 </mapper>

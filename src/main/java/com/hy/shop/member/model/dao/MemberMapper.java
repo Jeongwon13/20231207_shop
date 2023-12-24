@@ -3,6 +3,7 @@ package com.hy.shop.member.model.dao;
 import com.hy.shop.member.model.vo.Member;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -13,5 +14,7 @@ public interface MemberMapper {
     Member login(Member inputMember);
     Member findKakao(Map<String,Object> userInfo);
     void insertKakao(Map<String,Object> userInfo);
+    Member findNaver(Map<String,Object> userInfo);
+    void insertNaver(HashMap<String, Object> userInfo);
 }
 

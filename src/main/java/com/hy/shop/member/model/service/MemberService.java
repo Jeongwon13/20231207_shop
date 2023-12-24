@@ -1,28 +1,39 @@
 package com.hy.shop.member.model.service;
-
+import org.json.JSONObject;
 import com.google.gson.JsonElement;
-import com.hy.shop.commom.config.KakaoProperties;
+import com.hy.shop.commom.config.KakaoConfig;
+import com.hy.shop.commom.config.NaverConfig;
 import com.hy.shop.commom.util.SHA256;
 import com.hy.shop.member.controller.MemberController;
 import com.hy.shop.member.model.dao.MemberMapper;
 import com.hy.shop.member.model.vo.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.ArrayList;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.lang.System.out;
 
 @Slf4j
 @Service
@@ -30,7 +41,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberService {
     private static Logger logger = LoggerFactory.getLogger(MemberController.class);
-    private final KakaoProperties kakaoProperties;
+    private final KakaoConfig kakaoConfig;
+    private final NaverConfig naverConfig;
     private final MemberMapper memberMapper;
 
     /**
@@ -105,8 +117,8 @@ public class MemberService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=").append(kakaoProperties.getApiKey());  //본인이 발급받은 key
-            sb.append("&redirect_uri=").append(kakaoProperties.getRedirectUri());     // 본인이 설정해 놓은 경로
+            sb.append("&client_id=").append(kakaoConfig.getApiKey());  //본인이 발급받은 key
+            sb.append("&redirect_uri=").append(kakaoConfig.getRedirectUri());     // 본인이 설정해 놓은 경로
             sb.append("&code=").append(code);
             bw.write(sb.toString());
             bw.flush();
@@ -114,7 +126,7 @@ public class MemberService {
             //    결과 코드가 200이라면 성공
             // 여기서 안되는경우가 많이 있어서 필수 확인 !! **
             int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode + "확인");
+            out.println("responseCode : " + responseCode + "확인");
 
             //    요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -124,7 +136,7 @@ public class MemberService {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body:::: : " + result + "결과");
+            out.println("response body:::: : " + result + "결과");
 
             //    Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonParser parser = new JsonParser();
@@ -133,8 +145,8 @@ public class MemberService {
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
             refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
 
-            System.out.println("access_token : " + access_Token);
-            System.out.println("refresh_token : " + refresh_Token);
+            out.println("access_token : " + access_Token);
+            out.println("refresh_token : " + refresh_Token);
 
             br.close();
             bw.close();
@@ -155,6 +167,7 @@ public class MemberService {
         HashMap<String, Object> userInfo = new HashMap<>();
 
         String requestURL = "https://kapi.kakao.com/v2/user/me";
+        
         Member kakaoResult = null;
         try {
             URL url = new URL(requestURL); //1.url 객체만들기
@@ -165,7 +178,7 @@ public class MemberService {
 
             //키값, 속성 적용
             int responseCode = conn.getResponseCode(); //서버에서 보낸 http 상태코드 반환
-            System.out.println("responseCode :" + responseCode);
+            out.println("responseCode :" + responseCode);
             BufferedReader buffer = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             // 버퍼를 사용하여 읽는 것
             String line = "";
@@ -175,7 +188,7 @@ public class MemberService {
             }
             //readLine()) ==> 입력 String 값으로 리턴값 고정
 
-            System.out.println("response body :" + result);
+            out.println("response body :" + result);
 
             // 읽엇으니깐 데이터꺼내오기
             JsonParser parser = new JsonParser();
@@ -253,5 +266,6 @@ public class MemberService {
             e.printStackTrace();
         }
     }
+
 
 }

@@ -11,7 +11,7 @@ import lombok.Getter;
 @ConfigurationProperties(prefix = "kakao")
 @Getter
 @Setter
-public class KakaoProperties {
+public class KakaoConfig {
     private String apiKey;
     private String redirectUri;
     private Profiles profiles;
