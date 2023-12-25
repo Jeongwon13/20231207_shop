@@ -14,6 +14,7 @@
             , ADDRESS
             , MEMBER_BIRTH
             , SALT
+            , SOCIAL_TYPE
         ) VALUES (
               #{memberId}
             , #{memberPw}
@@ -24,25 +25,17 @@
             , #{address}
             , #{memberBirth}
             , #{salt}
+            , 'NM'
         )
     </insert>
 
     <!-- Login -->
     <select id="login" parameterType="Member" resultType="Member">
-        SELECT
-            MEMBER_NO
-            , MEMBER_ID
-            , MEMBER_PW
-            , MEMBER_EMAIL
-            , MEMBER_NAME
-            , MEMBER_NICKNAME
-            , MEMBER_PHONE
-            , ADDRESS
-            , MEMBER_BIRTH
-            , SALT
+        SELECT *
         FROM MEMBER
         WHERE 1=1
           AND MEMBER_ID = #{memberId}
+          AND SOCIAL_TYPE = 'NM'
     </select>
 
     <!-- Kakao -->
@@ -86,12 +79,35 @@
             MEMBER_PHONE,
             SOCIAL_TYPE
         ) VALUES (
-            #{response.id, jdbcType=VARCHAR},
+            #{id, jdbcType=VARCHAR},
             #{response.name},
             #{response.nickname},
             #{response.mobile},
             'NV'
         )
     </insert>
+
+    <!-- Google -->
+    <select id="findGoogle" parameterType="java.util.HashMap" resultType="Member">
+        SELECT *
+        FROM MEMBER
+        WHERE 1=1
+          AND MEMBER_ID = #{id}
+          AND SOCIAL_TYPE = 'GG'
+    </select>
+
+    <!-- Google -->
+    <insert id="insertGoogle" parameterType="java.util.HashMap">
+        INSERT INTO MEMBER(
+            MEMBER_ID,
+            MEMBER_EMAIL,
+            SOCIAL_TYPE
+        ) VALUES (
+            #{id},
+            #{email},
+            'GG'
+        )
+    </insert>
+
 
 </mapper>

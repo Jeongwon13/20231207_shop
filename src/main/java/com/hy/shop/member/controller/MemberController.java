@@ -1,15 +1,13 @@
 package com.hy.shop.member.controller;
 
+import com.hy.shop.commom.config.GoogleConfig;
 import com.hy.shop.commom.config.KakaoConfig;
 import com.hy.shop.commom.config.NaverConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.ui.Model;
 import com.hy.shop.member.model.service.MemberService;
@@ -28,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -40,10 +39,12 @@ public class MemberController {
 
     private final KakaoConfig kakaoConfig;
     private final NaverConfig naverConfig;
+    private final GoogleConfig googleConfig;
     private final MemberService memberService;
 
     /**
      * Login
+     *
      * @param model
      * @param session
      * @param request
@@ -68,6 +69,7 @@ public class MemberController {
 
     /**
      * 회원가입 시 동의하기 페이지
+     *
      * @return
      */
     @GetMapping("/signupAgree")
@@ -77,6 +79,7 @@ public class MemberController {
 
     /**
      * Sign Up Page
+     *
      * @return
      */
     @GetMapping("/signup")
@@ -86,6 +89,7 @@ public class MemberController {
 
     /**
      * Sign Up
+     *
      * @param member
      * @param address
      * @param redirect
@@ -138,6 +142,7 @@ public class MemberController {
 
     /**
      * Login
+     *
      * @param inputMember
      * @param model
      * @param redirect
@@ -179,6 +184,7 @@ public class MemberController {
 
     /**
      * Kakao Login(Call Back)
+     *
      * @param code
      * @param redirect
      * @param session
@@ -200,8 +206,8 @@ public class MemberController {
         String message = "";
         String path = "";
 
-        if(userInfo != null) {
-            message = userInfo.getMemberNickname()+"님 환영합니다.";
+        if (userInfo != null) {
+            message = userInfo.getMemberNickname() + "님 환영합니다.";
             path = "redirect:/";
         } else {
             message = "";
@@ -216,6 +222,7 @@ public class MemberController {
 
     /**
      * Naver Login
+     *
      * @param request
      * @return
      */
@@ -236,13 +243,14 @@ public class MemberController {
 
     /**
      * Naver Login(Call Back)
+     *
      * @param request
      * @param session
      * @param redirect
      * @return
      */
     @RequestMapping("/oauth/naver/login")
-    public String naverRedirect(HttpServletRequest request, HttpSession session, RedirectAttributes redirect) {
+    public String naverLogin(HttpServletRequest request, HttpSession session, RedirectAttributes redirect) {
         // 네이버에서 전달해준 code, state 값 가져오기
         String code = request.getParameter("code");
         String state = request.getParameter("state");
@@ -295,7 +303,7 @@ public class MemberController {
 
             String userInfoURL = "https://openapi.naver.com/v1/nid/me";
             // Header에 access_token 삽입
-            headers.set("Authorization", "Bearer "+access_token);
+            headers.set("Authorization", "Bearer " + access_token);
 
             // Request entity 생성
             HttpEntity<?> userInfoEntity = new HttpEntity<>(headers);
@@ -311,8 +319,8 @@ public class MemberController {
             log.info("naverLogin:::: {}", naverLogin);
             session.setAttribute("naverLogin", naverLogin);
 
-            if(naverLogin != null) {
-                message = naverLogin.getMemberName()+"님 환영합니다.";
+            if (naverLogin != null) {
+                message = naverLogin.getMemberName() + "님 환영합니다.";
                 path = "redirect:/";
             } else {
                 message = "";
@@ -329,5 +337,83 @@ public class MemberController {
 
         return path;
     }
+
+    /**
+     * Google Login
+     *
+     * @return
+     */
+    @GetMapping("/googleLogin")
+    public String googleLogin(HttpServletRequest request) {
+        String client_id = googleConfig.getClientId();
+        String redirect_uri = googleConfig.getRedirectUri();
+        List<String> selectedScopes = List.of("email");
+        String scopeString = String.join(",", selectedScopes);
+
+        String login_url = "https://accounts.google.com/o/oauth2/v2/auth?"
+                + "client_id=" + client_id
+                + "&redirect_uri=" + redirect_uri
+                + "&response_type=" + "code"
+                + "&scope=" + scopeString;
+
+        return "redirect:" + login_url;
+    }
+
+    /**
+     * Google Login
+     */
+    @GetMapping("/oauth/google/login")
+    public String googleLogin(@RequestParam("code") String code, RedirectAttributes redirect) {
+        String client_id = googleConfig.getClientId();
+        String client_secret = googleConfig.getClientSecret();
+        String redirect_uri = googleConfig.getRedirectUri();
+        String tokenUrl = googleConfig.getTokenUrl();
+
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, String> params = new HashMap<>();
+        params.put("code", code);
+        params.put("client_id", client_id);
+        params.put("client_secret", client_secret);
+        params.put("redirect_uri", redirect_uri);
+        params.put("grant_type", "authorization_code");
+
+        String message = "";
+        String path = "";
+
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(tokenUrl, params, HashMap.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            HashMap<String, Object> responseBody = responseEntity.getBody();
+            log.info("responseBody:::: {} ", responseBody);
+            String accessToken = (String) responseBody.get("access_token");
+            log.info("accessToken:::: {}", accessToken);
+
+            String userInfoUrl = googleConfig.getTokenResUrl() + accessToken;
+
+            ResponseEntity<HashMap> responseTokenEntity = restTemplate.getForEntity(userInfoUrl, HashMap.class);
+            log.info("responseTokenEntity:::: {} ",responseTokenEntity);
+            HashMap<String, Object> responseTokenBody = responseTokenEntity.getBody();
+
+            Member googleLogin = memberService.googleLogin(responseTokenBody);
+            if(googleLogin != null) {
+                message = "hy에 오신 것을 환영합니다.";
+                path = "redirect:/";
+            } else {
+                message = "";
+                path = "redirect:/member/login";
+            }
+            redirect.addFlashAttribute("message", message);
+
+            return path;
+        }
+
+        return null;
+    }
+
+
+
+
+
 
 }

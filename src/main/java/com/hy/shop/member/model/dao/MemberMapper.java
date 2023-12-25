@@ -18,5 +18,7 @@ public interface MemberMapper {
     Member findNaver(Map<String, Object> userResultMap);
     void insertNaver(Map<String, Object> userResultMap);
 
+    Member findGoogle(Map<String, Object> userResultMap);
+    void insertGoogle(Map<String, Object> userResultMap);
 }
 

@@ -1,5 +1,8 @@
 package com.hy.shop.member.model.service;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
+import com.hy.shop.commom.config.GoogleConfig;
 import com.hy.shop.commom.config.KakaoConfig;
 import com.hy.shop.commom.config.NaverConfig;
 import com.hy.shop.commom.util.SHA256;
@@ -10,15 +13,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.System.out;
 
@@ -30,6 +35,7 @@ public class MemberService {
     private static Logger logger = LoggerFactory.getLogger(MemberController.class);
     private final KakaoConfig kakaoConfig;
     private final NaverConfig naverConfig;
+    private final GoogleConfig googleConfig;
     private final MemberMapper memberMapper;
 
     /**
@@ -80,6 +86,7 @@ public class MemberService {
 
     /**
      * Kakao Login(Access Token)
+     *
      * @param code
      * @return
      */
@@ -146,6 +153,7 @@ public class MemberService {
 
     /**
      * Kakao Login(User -> DB)
+     *
      * @param access_Token
      * @return
      */
@@ -154,7 +162,7 @@ public class MemberService {
         HashMap<String, Object> userInfo = new HashMap<>();
 
         String requestURL = "https://kapi.kakao.com/v2/user/me";
-        
+
         Member kakaoResult = null;
         try {
             URL url = new URL(requestURL); //1.url 객체만들기
@@ -215,22 +223,22 @@ public class MemberService {
     }
 
 
-
     /**
      * Kakao Logout
+     *
      * @param accessToken
      */
     public void kakaoLogout(String accessToken) {
         String reqUrl = "https://kapi.kakao.com/v1/user/logout";
 
-        try{
+        try {
             URL url = new URL(reqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + accessToken);
 
             int responseCode = conn.getResponseCode();
-            log.info("[KakaoApi.kakaoLogout] responseCode : {}",  responseCode);
+            log.info("[KakaoApi.kakaoLogout] responseCode : {}", responseCode);
 
             BufferedReader br;
             if (responseCode >= 200 && responseCode <= 300) {
@@ -241,21 +249,21 @@ public class MemberService {
 
             String line = "";
             StringBuilder responseSb = new StringBuilder();
-            while((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 responseSb.append(line);
             }
             String result = responseSb.toString();
             log.info("kakao logout - responseBody = {}", result);
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Naver Login
+     *
      * @param userResultMap
      * @return
      */
@@ -274,5 +282,24 @@ public class MemberService {
             return naverResult;
         }
     }
+
+
+    public Member googleLogin(HashMap<String, Object> userResultMap) {
+        log.info("googleResultMap:::: {}", userResultMap);
+        Member googleResult = memberMapper.findGoogle(userResultMap);
+
+        log.info("googleResult:::: {}", googleResult);
+        if (googleResult == null) {
+            memberMapper.insertGoogle(userResultMap);
+
+            return memberMapper.findGoogle(userResultMap);
+        } else {
+            log.info("naverResultnaverResult:::: {}", googleResult);
+            return googleResult;
+        }
+    }
+
+
 }
+
 
