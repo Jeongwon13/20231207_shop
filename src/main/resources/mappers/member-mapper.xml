@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hy.shop.member.model.dao.MemberMapper">
 
-
+    <!-- Sign Up -->
     <insert id="signup" parameterType="Member">
         INSERT INTO MEMBER (
               MEMBER_ID
@@ -27,6 +27,7 @@
         )
     </insert>
 
+    <!-- Login -->
     <select id="login" parameterType="Member" resultType="Member">
         SELECT
             MEMBER_NO
@@ -44,6 +45,7 @@
           AND MEMBER_ID = #{memberId}
     </select>
 
+    <!-- Kakao -->
     <select id="findKakao" parameterType="java.util.HashMap" resultType="Member">
         SELECT *
         FROM MEMBER
@@ -53,7 +55,7 @@
         AND SOCIAL_TYPE = 'KP'
     </select>
 
-
+    <!-- Kakao -->
     <insert id="insertKakao" parameterType="java.util.HashMap">
         INSERT INTO MEMBER(
             MEMBER_EMAIL,
@@ -66,24 +68,28 @@
         )
     </insert>
 
+    <!-- Naver -->
     <select id="findNaver" parameterType="java.util.HashMap" resultType="Member">
         SELECT *
         FROM MEMBER
         WHERE 1=1
-          AND MEMBER_EMAIL = #{email}
-          AND MEMBER_NICKNAME = #{nickname}
+          AND MEMBER_ID = #{response.id, jdbcType=VARCHAR}
           AND SOCIAL_TYPE = 'NV'
     </select>
 
-
+    <!-- Naver -->
     <insert id="insertNaver" parameterType="java.util.HashMap">
         INSERT INTO MEMBER(
-            MEMBER_EMAIL,
+            MEMBER_ID,
+            MEMBER_NAME,
             MEMBER_NICKNAME,
+            MEMBER_PHONE,
             SOCIAL_TYPE
         ) VALUES (
-            #{email},
-            #{nickname},
+            #{response.id, jdbcType=VARCHAR},
+            #{response.name},
+            #{response.nickname},
+            #{response.mobile},
             'NV'
         )
     </insert>

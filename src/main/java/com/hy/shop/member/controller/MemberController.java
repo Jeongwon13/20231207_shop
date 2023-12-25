@@ -1,13 +1,11 @@
 package com.hy.shop.member.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hy.shop.commom.config.KakaoConfig;
 import com.hy.shop.commom.config.NaverConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,9 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +42,13 @@ public class MemberController {
     private final NaverConfig naverConfig;
     private final MemberService memberService;
 
+    /**
+     * Login
+     * @param model
+     * @param session
+     * @param request
+     * @return
+     */
     @GetMapping("/login")
     public String login(Model model, HttpSession session, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -64,16 +66,32 @@ public class MemberController {
         return "member/login";
     }
 
+    /**
+     * 회원가입 시 동의하기 페이지
+     * @return
+     */
     @GetMapping("/signupAgree")
     public String signupAgree() {
         return "member/signupAgree";
     }
 
+    /**
+     * Sign Up Page
+     * @return
+     */
     @GetMapping("/signup")
     public String signup() {
         return "member/signup";
     }
 
+    /**
+     * Sign Up
+     * @param member
+     * @param address
+     * @param redirect
+     * @param request
+     * @return
+     */
     @PostMapping("/signup")
     public String signup(@ModelAttribute Member member, @RequestParam(name = "address") String[] address, RedirectAttributes redirect, HttpServletRequest request) {
         String joinedAddress = (address != null) ? String.join(",,", address) : "";
@@ -118,6 +136,16 @@ public class MemberController {
     }
 
 
+    /**
+     * Login
+     * @param inputMember
+     * @param model
+     * @param redirect
+     * @param req
+     * @param resp
+     * @param remember
+     * @return
+     */
     @PostMapping("/login")
     public String login(@ModelAttribute Member inputMember, Model model, RedirectAttributes redirect,
                         HttpServletRequest req, HttpServletResponse resp, @RequestParam(name = "remember", required = false) String remember) {
@@ -149,6 +177,14 @@ public class MemberController {
         }
     }
 
+    /**
+     * Kakao Login(Call Back)
+     * @param code
+     * @param redirect
+     * @param session
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/oauth")
     public String kakaoLogin(@RequestParam(value = "code", required = false) String code, RedirectAttributes redirect, HttpSession session) throws Exception {
         System.out.println("####### " + code);
@@ -178,6 +214,11 @@ public class MemberController {
     }
 
 
+    /**
+     * Naver Login
+     * @param request
+     * @return
+     */
     @RequestMapping("/naverLogin")
     public String naverLogin(HttpServletRequest request) {
         String client_id = naverConfig.getClientId();
@@ -193,8 +234,15 @@ public class MemberController {
         return "redirect:" + login_url;
     }
 
+    /**
+     * Naver Login(Call Back)
+     * @param request
+     * @param session
+     * @param redirect
+     * @return
+     */
     @RequestMapping("/oauth/naver/login")
-    public String naver_redirect(HttpServletRequest request) {
+    public String naverRedirect(HttpServletRequest request, HttpSession session, RedirectAttributes redirect) {
         // 네이버에서 전달해준 code, state 값 가져오기
         String code = request.getParameter("code");
         String state = request.getParameter("state");
@@ -229,6 +277,9 @@ public class MemberController {
         // header 와 body로 Request 생성
         HttpEntity<?> entity = new HttpEntity<>(parameter, headers);
 
+        String message = "";
+        String path = "";
+
         try {
             RestTemplate restTemplate = new RestTemplate();
             // 응답 데이터(json)를 Map 으로 받을 수 있도록 관련 메시지 컨버터 추가
@@ -252,19 +303,31 @@ public class MemberController {
             // Post 방식으로 Http 요청
             // 응답 데이터 형식은 Hashmap 으로 지정
             ResponseEntity<HashMap> userResult = restTemplate.postForEntity(userInfoURL, userInfoEntity, HashMap.class);
-            Map<String, String> userResultMap = userResult.getBody();
+            HashMap<String, Object> userResultMap = userResult.getBody();
 
             //응답 데이터 확인
-            System.out.println(userResultMap);
+            log.info("userResultMap:::: {}", userResultMap);
+            Member naverLogin = memberService.naverLogin(userResultMap);
+            log.info("naverLogin:::: {}", naverLogin);
+            session.setAttribute("naverLogin", naverLogin);
+
+            if(naverLogin != null) {
+                message = naverLogin.getMemberName()+"님 환영합니다.";
+                path = "redirect:/";
+            } else {
+                message = "";
+                path = "redirect:/member/login";
+            }
+            redirect.addFlashAttribute("message", message);
+            return path;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         // 세션에 저장된 state 값 삭제
         request.getSession().removeAttribute("state");
 
-        return "redirect:/";
+        return path;
     }
 
 }

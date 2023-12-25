@@ -1,5 +1,4 @@
 package com.hy.shop.member.model.service;
-import org.json.JSONObject;
 import com.google.gson.JsonElement;
 import com.hy.shop.commom.config.KakaoConfig;
 import com.hy.shop.commom.config.NaverConfig;
@@ -9,29 +8,17 @@ import com.hy.shop.member.model.dao.MemberMapper;
 import com.hy.shop.member.model.vo.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.tomcat.util.json.JSONParser;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.System.out;
 
@@ -46,7 +33,7 @@ public class MemberService {
     private final MemberMapper memberMapper;
 
     /**
-     * 일반 회원가입
+     * Sign Up
      *
      * @param insertMember
      * @return
@@ -70,7 +57,7 @@ public class MemberService {
     }
 
     /**
-     * 일반 로그인
+     * Login
      *
      * @param inputMember
      * @return
@@ -92,7 +79,7 @@ public class MemberService {
     }
 
     /**
-     * 카카오 로그인
+     * Kakao Login(Access Token)
      * @param code
      * @return
      */
@@ -158,7 +145,7 @@ public class MemberService {
     }
 
     /**
-     * 카카오 로그인
+     * Kakao Login(User -> DB)
      * @param access_Token
      * @return
      */
@@ -230,7 +217,7 @@ public class MemberService {
 
 
     /**
-     * 카카오 로그아웃
+     * Kakao Logout
      * @param accessToken
      */
     public void kakaoLogout(String accessToken) {
@@ -267,5 +254,25 @@ public class MemberService {
         }
     }
 
+    /**
+     * Naver Login
+     * @param userResultMap
+     * @return
+     */
+    public Member naverLogin(HashMap<String, Object> userResultMap) {
+        log.info("userResultMap:::: {}", userResultMap);
 
+        Member naverResult = memberMapper.findNaver(userResultMap);
+
+        log.info("naverResult:::: {}", naverResult);
+        if (naverResult == null) {
+            memberMapper.insertNaver(userResultMap);
+
+            return memberMapper.findNaver(userResultMap);
+        } else {
+            log.info("naverResultnaverResult:::: {}", naverResult);
+            return naverResult;
+        }
+    }
 }
+
