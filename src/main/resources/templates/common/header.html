@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Thymeleaf 선언 / headerFragment 임을 선언-->
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="HeaderFragment">
 
     <div class="header-divider"></div>
@@ -9,26 +9,40 @@
                 <nav class="category-nav">
                     <h1><a href="/">쇼핑몰</a></h1>
                     <ul>
-                        <li><a href="/itemList">APPAREL</a></li>
-                        <li><a href="#">CAP</a></li>
-                        <li><a href="#">SHOES</a></li>
-                        <li><a href="#">BAG</a></li>
-                        <li><a href="#">ACC</a></li>
-                        <li><a href="#">KIDS</a></li>
-                        <!-- 다른 카테고리 아이템들을 필요에 따라 추가하세요 -->
+                        <li>
+                            <a href="/item/list/1">남성</a>
+                            <a href="/item/list/2">여성</a>
+                            <a href="/item/list/3">아동</a>
+                            <a href="/item/list/4">가방</a>
+                            <a href="/item/list/5">랭킹</a>
+                        </li>
+
                     </ul>
+
                 </nav>
             </div>
             <div class="header-right">
                 <nav>
                     <ul>
                         <li><a href="#"><div class="material-icons">search</div></a></li>
-
                         <li><a href="#"><span class="material-icons">shopping_cart</span></a></li>
-                        <li><a href="/member/login"><span class="material-icons">account_circle</span></a></li>
+
+                        <li th:if="${session['loginMember'] == null and session['kakaoLogin'] == null and session['naverLogin'] == null and session['googleLogin'] == null}">
+                            <a th:href="@{/member/login}">
+                                <span>로그인</span>
+                            </a>
+                        </li>
+
+                        <!-- 로그인 후 -->
+                        <li th:if="${session['loginMember'] != null or session['kakaoLogin'] != null or session['naverLogin'] != null or session['googleLogin'] != null}">
+                            <a th:href="@{/mypage/main}">
+                                <span>마이페이지</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
+
         </div>
     </header>
 </html>

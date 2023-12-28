@@ -187,20 +187,32 @@ public class MemberService {
 
             // 읽엇으니깐 데이터꺼내오기
             JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result); //Json element 문자열변경
-            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+            JsonElement element = parser.parse(result); // Json element 문자열 변경
+            JsonObject jsonObject = element.getAsJsonObject();
 
-            JsonElement nicknameElement = properties.getAsJsonObject().get("nickname");
+            // 최상위 객체에서 id, properties, kakao_account 가져오기
+            JsonElement idElement = jsonObject.get("id");
+            String id = (idElement != null && !idElement.isJsonNull()) ? idElement.getAsString() : null;
+
+            JsonObject properties = jsonObject.getAsJsonObject("properties");
+            JsonObject kakaoAccount = jsonObject.getAsJsonObject("kakao_account");
+
+            JsonElement nicknameElement = properties.getAsJsonPrimitive("nickname");
             String nickname = (nicknameElement != null && !nicknameElement.isJsonNull()) ? nicknameElement.getAsString() : null;
 
-            JsonElement emailElement = kakao_account.getAsJsonObject().get("email");
+            JsonElement emailElement = kakaoAccount.getAsJsonPrimitive("email");
             String email = (emailElement != null && !emailElement.isJsonNull()) ? emailElement.getAsString() : null;
-            log.info("nickname:::: {}", nickname);
 
+            log.info("id::::{}", id);
+            log.info("nickname:::: {}", nickname);
             log.info("email:::: {}", email);
+
+            userInfo.put("id", id);
             userInfo.put("nickname", nickname);
             userInfo.put("email", email);
+
+            kakaoResult = memberMapper.findKakao(userInfo);
+
 
             kakaoResult = memberMapper.findKakao(userInfo);
 
@@ -294,7 +306,7 @@ public class MemberService {
 
             return memberMapper.findGoogle(userResultMap);
         } else {
-            log.info("naverResultnaverResult:::: {}", googleResult);
+            log.info("googleResult!!:::: {}", googleResult);
             return googleResult;
         }
     }

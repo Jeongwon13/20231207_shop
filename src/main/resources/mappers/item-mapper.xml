@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hy.shop.item.model.dao.ItemMapper">
+
+    <select id="selectItemType" resultType="ItemType">
+        SELECT ITEM_CD, ITEM_NAME
+        FROM ITEM_TYPE
+    </select>
+
+</mapper>

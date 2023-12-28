@@ -12,3 +12,4 @@ $('#slider2').slick({
     slidesToScroll: 1,
     autoplay: false, // 움직이지 않음
 });
+

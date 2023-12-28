@@ -16,40 +16,11 @@
 </head>
 
 <body>
+    <div th:replace="common/header :: HeaderFragment"></div>
 
-
-    <div class="header-divider"></div>
-    <header>
-        <div class="header-content">
-            <div class="header-left">
-                <nav class="category-nav">
-                    <h1><a href="/main">쇼핑몰</a></h1>
-                    <ul>
-                        <li><a href="#">APPAREL</a></li>
-                        <li><a href="#">CAP</a></li>
-                        <li><a href="#">SHOES</a></li>
-                        <li><a href="#">BAG</a></li>
-                        <li><a href="#">ACC</a></li>
-                        <li><a href="#">KIDS</a></li> 
-                        <!-- 다른 카테고리 아이템들을 필요에 따라 추가하세요 -->
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <nav>
-                    <ul>
-                        <li><a href="#"><div class="material-icons">search</div></a></li>
-                     
-                        <li><a href="#"><span class="material-icons">shopping_cart</span></a></li>
-                        <li><a href="/member/login"><span class="material-icons">account_circle</span></a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
     <div class="container">
         <div>
-         <h2>APPAREL > 상의 </h2>
+         <h2>남성 > 상의 </h2>
         </div>
         <div class="item-list">
             <!-- 예시 아이템, 필요에 따라 복사하여 추가하세요 -->
@@ -125,9 +96,7 @@
          
     </div>
     </div>
-    <footer>
-        <p>&copy; 2023 My Shopping Mall. All rights reserved.</p>
-    </footer>
+    <div th:replace="common/footer :: FooterFragment"></div>
 </body>
 
 </html>

@@ -5,6 +5,7 @@ import com.hy.shop.commom.config.KakaoConfig;
 import com.hy.shop.commom.config.NaverConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.*;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@SessionAttributes({"loginMember"})
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @Controller
@@ -152,15 +152,17 @@ public class MemberController {
      * @return
      */
     @PostMapping("/login")
-    public String login(@ModelAttribute Member inputMember, Model model, RedirectAttributes redirect,
+    public String login(@ModelAttribute Member inputMember, Model model, RedirectAttributes redirect, HttpSession session,
                         HttpServletRequest req, HttpServletResponse resp, @RequestParam(name = "remember", required = false) String remember) {
         Member loginMember = memberService.login(inputMember);
-
+        String message = "";
+        String path = "";
         if (loginMember != null) {
             logger.info("로그인 성공: {}", loginMember.getMemberId());
 
             model.addAttribute("loginMember", loginMember);
             if (loginMember.getMemberId() != null) {
+                session.setAttribute("loginMember", loginMember);
                 Cookie cookie = new Cookie("remember", loginMember.getMemberId());
                 if (remember != null) {
                     cookie.setMaxAge(60 * 60 * 24 * 365); //1년
@@ -172,13 +174,16 @@ public class MemberController {
                 }
                 cookie.setPath(req.getContextPath() + "/member/login");
                 resp.addCookie(cookie);
+                message = loginMember.getMemberNickname() + "님 환영합니다.";
+                path = "redirect:/";
+                redirect.addFlashAttribute("message", message);
             }
-            return "redirect:/";
+            return path;
         } else {
             redirect.addFlashAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
-
+            path = "redirect:/member/login";
             logger.info("로그인 실패 {}", inputMember.getMemberId());
-            return "redirect:/member/login";
+            return path;
         }
     }
 
@@ -207,6 +212,7 @@ public class MemberController {
         String path = "";
 
         if (userInfo != null) {
+            session.setAttribute("kakaoLogin", userInfo);
             message = userInfo.getMemberNickname() + "님 환영합니다.";
             path = "redirect:/";
         } else {
@@ -320,6 +326,7 @@ public class MemberController {
             session.setAttribute("naverLogin", naverLogin);
 
             if (naverLogin != null) {
+                session.setAttribute("naverLogin", naverLogin);
                 message = naverLogin.getMemberName() + "님 환영합니다.";
                 path = "redirect:/";
             } else {
@@ -363,7 +370,7 @@ public class MemberController {
      * Google Login
      */
     @GetMapping("/oauth/google/login")
-    public String googleLogin(@RequestParam("code") String code, RedirectAttributes redirect) {
+    public String googleLogin(@RequestParam("code") String code, RedirectAttributes redirect, HttpSession session) {
         String client_id = googleConfig.getClientId();
         String client_secret = googleConfig.getClientSecret();
         String redirect_uri = googleConfig.getRedirectUri();
@@ -397,6 +404,7 @@ public class MemberController {
 
             Member googleLogin = memberService.googleLogin(responseTokenBody);
             if(googleLogin != null) {
+                session.setAttribute("googleLogin", googleLogin);
                 message = "hy에 오신 것을 환영합니다.";
                 path = "redirect:/";
             } else {

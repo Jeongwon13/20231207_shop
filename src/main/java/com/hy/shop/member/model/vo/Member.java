@@ -20,6 +20,7 @@ public class Member {
     private String salt;
     private String socialType;
     private String withdrawalFlag;
+    private String auth;
 }
 
 
