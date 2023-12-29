@@ -16,9 +16,7 @@ import java.util.List;
 public class ItemService {
     private final ItemMapper itemMapper;
 
-    public List<ItemType> selectItemType() {
-        List<ItemType> itemTypeList = itemMapper.selectItemType();
-        log.info("itemTypeList:::: {} ",itemTypeList);
-        return itemTypeList;
+    public List<ItemType> selectOneItemType(int itemCode) {
+        return itemMapper.selectOneItemType(itemCode);
     }
 }

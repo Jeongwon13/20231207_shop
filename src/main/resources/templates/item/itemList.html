@@ -19,11 +19,19 @@
     <div th:replace="common/header :: HeaderFragment"></div>
 
     <div class="container">
-        <div>
-         <h2>남성 > 상의 </h2>
+
+        <div class="item-list-container">
+        <div th:each="itemType : ${itemOneTypeList}">
+            <p th:text="${itemType.itemName} + ' > 상의'"></p>
+
+            <button th:if="${adminMember != null and adminMember.auth == '0'}" onclick="openPopup('${itemType.itemCode}')">
+                상품 등록
+            </button>
+
+
+        </div>
         </div>
         <div class="item-list">
-            <!-- 예시 아이템, 필요에 따라 복사하여 추가하세요 -->
             <div class="item">
                 <img src="https://via.placeholder.com/150" alt="Item Image">
                 <div class="item-details">
@@ -96,7 +104,19 @@
          
     </div>
     </div>
+
     <div th:replace="common/footer :: FooterFragment"></div>
+
+    <script>
+        function openPopup(itemCode) {
+            console.log('Opening popup for itemCode:', itemCode);
+
+            var popupUrl = '/item/list/' + itemCode + '/registration';
+            console.log('Popup URL:', popupUrl);
+
+            window.open(popupUrl, 'popup', 'width=800,height=800,location=no,status=no,scrollbars=yes');
+        }
+    </script>
 </body>
 
 </html>

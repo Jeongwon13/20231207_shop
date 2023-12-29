@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Item 등록</title>
+    <link rel="stylesheet" href="/css/itemRegistration.css">
+</head>
+<body>
+<div class="registration-container">
+    <form id="itemRegistrationForm" action="/item/register" method="post" enctype="multipart/form-data">
+        <label for="itemName">상품명:</label>
+        <input type="text" id="itemName" name="itemName" required>
+
+        <label for="price">가격:</label>
+        <input type="number" id="price" name="price" required>
+
+        <label for="stockQuantity">재고 수량:</label>
+        <input type="number" id="stockQuantity" name="stockQuantity" required>
+
+        <label for="image1">이미지 1:</label>
+        <input type="file" id="image1" name="image1" accept="image/*" required>
+
+        <label for="image2">이미지 2:</label>
+        <input type="file" id="image2" name="image2" accept="image/*">
+
+        <label for="image3">이미지 3:</label>
+        <input type="file" id="image3" name="image3" accept="image/*">
+
+        <label for="image4">이미지 4:</label>
+        <input type="file" id="image4" name="image4" accept="image/*">
+
+        <label for="image5">이미지 5:</label>
+        <input type="file" id="image5" name="image5" accept="image/*">
+
+        <input type="submit" value="등록">
+    </form>
+</div>
+</body>
+
+</html>

@@ -5,7 +5,6 @@ import com.hy.shop.item.model.vo.ItemType;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,9 +20,6 @@ public class ItemTypeInterceptor implements HandlerInterceptor {
 
     private final ItemService itemService;
 
-    public List<ItemType> getItemTypeList() {
-        return itemService.selectItemType();
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,17 +32,6 @@ public class ItemTypeInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        ServletContext application = request.getServletContext();
-
-        if (application.getAttribute("itemTypeList") == null && modelAndView != null) {
-            List<ItemType> itemTypeList = itemService.selectItemType();
-            log.info("itemTypeListInterceptor:::: {}", itemTypeList);
-            application.setAttribute("itemTypeList", itemTypeList);
-
-            modelAndView.addObject("itemTypeList", itemTypeList);
-            log.info("modelAndView::::{}", modelAndView);
-        }
-
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 

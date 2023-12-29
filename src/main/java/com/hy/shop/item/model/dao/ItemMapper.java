@@ -10,8 +10,7 @@ import java.util.List;
 @Mapper
 public interface ItemMapper {
 
-    List<ItemType> selectItemType();
-
+    List<ItemType> selectOneItemType(int itemCode);
 
 
 }
