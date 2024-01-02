@@ -22,9 +22,9 @@
 
         <div class="item-list-container">
         <div th:each="itemType : ${itemOneTypeList}">
-            <p th:text="${itemType.itemName} + ' > 상의'"></p>
+            <p th:text="${itemType.itemTypeName} + ' > 상의'"></p>
 
-            <button th:if="${adminMember != null and adminMember.auth == '0'}" onclick="openPopup('${itemType.itemCode}')">
+            <button th:if="${adminMember != null and adminMember.auth == '0'}" onclick="openPopup('${itemType.itemTypeCode}')">
                 상품 등록
             </button>
 
@@ -33,11 +33,13 @@
         </div>
         <div class="item-list">
             <div class="item">
+                <a href="#">
                 <img src="https://via.placeholder.com/150" alt="Item Image">
                 <div class="item-details">
-                    <h3>Item Name</h3>
-                    <p>$19.99</p>
+                    <h3>뽀미뽀미점퍼</h3>
+                    <p>$32.99</p>
                 </div>
+                </a>
             </div>
 
             <div class="item">
@@ -110,11 +112,10 @@
     <script>
         function openPopup(itemCode) {
             console.log('Opening popup for itemCode:', itemCode);
-
             var popupUrl = '/item/list/' + itemCode + '/registration';
             console.log('Popup URL:', popupUrl);
 
-            window.open(popupUrl, 'popup', 'width=800,height=800,location=no,status=no,scrollbars=yes');
+            window.open(popupUrl, 'popup', 'width=800,height=1200,location=no,status=no,scrollbars=yes');
         }
     </script>
 </body>

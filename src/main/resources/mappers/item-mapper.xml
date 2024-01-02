@@ -3,21 +3,53 @@
 <mapper namespace="com.hy.shop.item.model.dao.ItemMapper">
 
     <select id="selectOneItemType" resultType="ItemType">
-        SELECT ITEM_CD, ITEM_NAME
+        SELECT ITEM_TYPE_CD, ITEM_TYPE_NAME
         FROM ITEM_TYPE
-        WHERE ITEM_CD = #{itemCode}
+        WHERE ITEM_TYPE_CD = #{itemTypeCd}
+    </select>
+
+
+    <insert id="insertItem" parameterType="java.util.Map">
+        INSERT INTO ITEM (
+            ITEM_NAME,
+            ITEM_PRICE,
+            STOCK_QUANTITY,
+            ITEM_CATEGORY_ID,
+            ITEM_TYPE_CD,
+            ITEM_CONTENT
+        ) VALUES (
+            #{itemName},
+            #{itemPrice},
+            #{stockQuantity},
+            #{itemCategoryId},
+            #{itemTypeCd},
+            #{itemContent}
+        )
+    </insert>
+
+    <insert id="insertItemImageList" parameterType="list">
+        INSERT INTO ITEM_IMAGE (IMAGE_RENAME, IMAGE_ORIGINAL, IMAGE_LEVEL, ITEM_NO)
+        VALUES
+        <foreach collection="list" item="img" separator=",">
+            (#{img.imageReName}, #{img.imageOriginal}, #{img.imageLevel}, #{img.itemNo})
+        </foreach>
+    </insert>
+
+    <select id="selectLastItemNo" resultType="Item">
+        SELECT *
+        FROM ITEM
+        ORDER BY ITEM_NO DESC
+            LIMIT 1
     </select>
 
 
 
 
-
-
-
-
-
-
-
-
-
 </mapper>
+
+
+
+
+
+
+

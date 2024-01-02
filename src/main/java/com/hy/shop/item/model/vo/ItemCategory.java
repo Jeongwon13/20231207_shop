@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.ibatis.type.Alias;
 
-@Alias("ItemType")
-@Getter
+@Alias("ItemCategory")
 @AllArgsConstructor
-public class ItemType {
-    private int itemTypeCd;
-    private String itemTypeName;
+@Getter
+public class ItemCategory {
+    private int itemCategoryId;
+    private String itemCategoryName;
+
 
 }

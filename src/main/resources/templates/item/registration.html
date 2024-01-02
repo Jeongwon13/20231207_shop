@@ -6,32 +6,55 @@
     <title>Item 등록</title>
     <link rel="stylesheet" href="/css/itemRegistration.css">
 </head>
+
 <body>
 <div class="registration-container">
-    <form id="itemRegistrationForm" action="/item/register" method="post" enctype="multipart/form-data">
+    <form id="itemRegistrationForm" action="/item/list/register" method="post" enctype="multipart/form-data">
         <label for="itemName">상품명:</label>
-        <input type="text" id="itemName" name="itemName" required>
+        <input type="text" id="itemName" name="itemName">
 
-        <label for="price">가격:</label>
-        <input type="number" id="price" name="price" required>
+        <label for="itemPrice">가격:</label>
+        <input type="text" id="itemPrice" name="itemPrice" >
 
         <label for="stockQuantity">재고 수량:</label>
-        <input type="number" id="stockQuantity" name="stockQuantity" required>
+        <input type="number" id="stockQuantity" name="stockQuantity" >
 
-        <label for="image1">이미지 1:</label>
-        <input type="file" id="image1" name="image1" accept="image/*" required>
+        <label for="itemContent">상품 설명:</label>
+        <input type="text" id="itemContent" name="itemContent" >
 
-        <label for="image2">이미지 2:</label>
-        <input type="file" id="image2" name="image2" accept="image/*">
+        <label >분류:</label>
+        <select name="itemTypeCd" id="itemTypeCd">
+            <option value="" disabled selected>카테고리를 선택하세요</option>
+            <option value="1">남성</option>
+            <option value="2">여성</option>
+            <option value="3">아동</option>
+            <option value="4">ACC</option>
+        </select>
 
-        <label for="image3">이미지 3:</label>
-        <input type="file" id="image3" name="image3" accept="image/*">
+        <label>카테고리:</label>
+        <select name="itemCategoryId" id="itemCategoryId" >
+            <option value="" disabled selected>카테고리를 선택하세요</option>
+            <option value="1">상의</option>
+            <option value="2">하의</option>
+            <option value="3">신발</option>
+            <option value="4">모자</option>
+            <option value="5">악세사리</option>
+        </select>
 
-        <label for="image4">이미지 4:</label>
-        <input type="file" id="image4" name="image4" accept="image/*">
+        <label>이미지 1:</label>
+        <input type="file" name="images" accept="images/*" >
 
-        <label for="image5">이미지 5:</label>
-        <input type="file" id="image5" name="image5" accept="image/*">
+        <label>이미지 2:</label>
+        <input type="file" name="images" accept="images/*">
+
+        <label>이미지 3:</label>
+        <input type="file" name="images" accept="images/*">
+
+        <label>이미지 4:</label>
+        <input type="file" name="images" accept="images/*">
+
+        <label>이미지 5:</label>
+        <input type="file" name="images" accept="images/*">
 
         <input type="submit" value="등록">
     </form>
