@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,13 +57,13 @@ public class ItemService {
 
 
                     log.info("reName:::: {}", reName);
-
-                    Item itemImgNo = itemMapper.selectLastItemNo();
+                    log.info("reNameList:::: {}", reNameList);
+                    Long itemImgNo = itemMapper.selectLastItemNo();
 
                     log.info("itemImgNo:::: {}", itemImgNo);
 
                     ItemImage img = ItemImage.builder()
-                            .itemNo(itemImgNo.getItemNo())
+                            .itemNo(itemImgNo)
                             .imageLevel(i)
                             .imageOriginal(imageList.get(i).getOriginalFilename())
                             .imageReName(reName)

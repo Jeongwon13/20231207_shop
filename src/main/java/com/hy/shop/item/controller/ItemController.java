@@ -93,10 +93,6 @@ public class ItemController {
         log.info("itemId:::: {}" , itemId );
         log.info("itemDetail:::: {}" , item);
 
-
-
-
-
         String path = null;
         String message = null;
 
