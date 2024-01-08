@@ -38,9 +38,12 @@ public class ItemController {
     public String itemList(@PathVariable(name = "itemTypeCode") int itemTypeCd, Model model, HttpSession session) {
         List<ItemType> itemOneTypeList = itemService.selectOneItemType(itemTypeCd);
         log.info("itemOneTypeList:::: {} ", itemOneTypeList);
+        List<Map<String, Object>> resultList = itemService.selectListItem(String.valueOf(itemTypeCd));
+        log.info("map::::{}", resultList);
         Member adminMember = (Member) session.getAttribute("loginMember");
         model.addAttribute("itemOneTypeList", itemOneTypeList);
         model.addAttribute("adminMember", adminMember);
+        model.addAttribute("resultList", resultList);
         log.info("adminMember:::: {} ", adminMember);
         return "item/itemList";
     }
@@ -97,20 +100,16 @@ public class ItemController {
         String message = null;
 
         if(itemId > 0) {
-
             path = "/";
             message = "상품이 등록되었습니다.";
-
         }else {
             path = "./";
             message = "상품 등록 실패 ...";
         }
-
         ra.addFlashAttribute("message", message);
-
         return "redirect:" + path;
-
     }
+
 
 
 

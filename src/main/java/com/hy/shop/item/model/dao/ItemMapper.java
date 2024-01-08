@@ -1,12 +1,9 @@
 package com.hy.shop.item.model.dao;
 
-import com.hy.shop.item.model.vo.Item;
 import com.hy.shop.item.model.vo.ItemImage;
 import com.hy.shop.item.model.vo.ItemType;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,5 +17,7 @@ public interface ItemMapper {
     Long selectLastItemNo();
 
     int insertItemImageList(List<ItemImage> itemImageList);
+    List<Map<String, Object>> selectListItem(String itemTypeCd);
+
 }
 

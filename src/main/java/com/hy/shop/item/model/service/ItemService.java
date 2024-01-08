@@ -2,7 +2,6 @@ package com.hy.shop.item.model.service;
 
 import com.hy.shop.commom.util.Util;
 import com.hy.shop.item.model.dao.ItemMapper;
-import com.hy.shop.item.model.vo.Item;
 import com.hy.shop.item.model.vo.ItemImage;
 import com.hy.shop.item.model.vo.ItemType;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +30,11 @@ public class ItemService {
 
     @Transactional(rollbackFor = { Exception.class })
     public int insertItem(Map<String, Object> params, List<MultipartFile> imageList, String folderPath) throws IOException {
+
+        String itemImageName = Util.fileRename(imageList.get(0).getOriginalFilename());
+
+        String itemImage = "/src/main/resources/static/images/items/" + itemImageName;
+        params.put("itemImage", itemImage);
         log.info("params:::: {} ", params);
         int itemId = itemMapper.insertItem(params);
 
@@ -96,7 +99,10 @@ public class ItemService {
     }
 
 
- }
+    public List<Map<String, Object>> selectListItem(String itemTypeCd) {
+        return itemMapper.selectListItem(itemTypeCd);
+    }
+}
 
 
 

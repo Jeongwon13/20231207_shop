@@ -2,13 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hy.shop.item.model.dao.ItemMapper">
 
+    <!-- ItemTypeCode 가져오기 -->
     <select id="selectOneItemType" resultType="ItemType">
-        SELECT ITEM_TYPE_CD, ITEM_TYPE_NAME
+        SELECT
+            ITEM_TYPE_CD
+            , ITEM_TYPE_NAME
         FROM ITEM_TYPE
-        WHERE ITEM_TYPE_CD = #{itemTypeCd}
+        WHERE 1=1
+            AND ITEM_TYPE_CD = #{itemTypeCd}
     </select>
 
-
+    <!-- ITEM 값 넣기 -->
     <insert id="insertItem" parameterType="java.util.Map">
         INSERT INTO ITEM (
             ITEM_NAME,
@@ -16,32 +20,61 @@
             STOCK_QUANTITY,
             ITEM_CATEGORY_ID,
             ITEM_TYPE_CD,
-            ITEM_CONTENT
+            ITEM_CONTENT,
+            ITEM_IMAGE
         ) VALUES (
             #{itemName},
             #{itemPrice},
             #{stockQuantity},
             #{itemCategoryId},
             #{itemTypeCd},
-            #{itemContent}
+            #{itemContent},
+            #{itemImage}
         )
     </insert>
 
+    <!-- ITEM_IMAGE 값 넣기 -->
     <insert id="insertItemImageList" parameterType="list">
-        INSERT INTO ITEM_IMAGE (IMAGE_RENAME, IMAGE_ORIGINAL, IMAGE_LEVEL, ITEM_NO)
+        INSERT INTO ITEM_IMAGE (
+            IMAGE_RENAME
+          , IMAGE_ORIGINAL
+          , IMAGE_LEVEL
+          , ITEM_NO
+        )
         VALUES
         <foreach collection="list" item="img" separator=",">
-            (#{img.imageReName}, #{img.imageOriginal}, #{img.imageLevel}, #{img.itemNo})
+            (
+             #{img.imageReName}
+            , #{img.imageOriginal}
+            , #{img.imageLevel}
+            , #{img.itemNo}
+            )
         </foreach>
     </insert>
 
+    <!-- 가장 최신 저장된 ITEM_NO 값 가져오기 -->
     <select id="selectLastItemNo" resultType="Long">
         SELECT ITEM_NO
         FROM ITEM
         ORDER BY ITEM_NO DESC
-            LIMIT 1
+        LIMIT 1
     </select>
 
+    <!-- ITEM LIST 가져오기 -->
+    <select id="selectListItem" resultType="java.util.Map">
+        SELECT ITEM_NO
+             , ITEM_PRICE
+             , ITEM_NAME
+             , ITEM_IMAGE
+             , STOCK_QUANTITY
+             , ITEM_CATEGORY_ID
+             , ITEM_TYPE_CD
+             , ITEM_CONTENT
+        FROM ITEM
+        WHERE 1=1
+            AND ITEM_TYPE_CD = #{itemTypeCd}
+        ORDER BY ITEM_NO DESC;
+    </select>
 
 
 
