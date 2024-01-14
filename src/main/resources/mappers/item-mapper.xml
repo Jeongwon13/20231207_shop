@@ -21,7 +21,8 @@
             ITEM_CATEGORY_ID,
             ITEM_TYPE_CD,
             ITEM_CONTENT,
-            ITEM_IMAGE
+            ITEM_IMAGE,
+            ITEM_IMAGE_2
         ) VALUES (
             #{itemName},
             #{itemPrice},
@@ -29,7 +30,8 @@
             #{itemCategoryId},
             #{itemTypeCd},
             #{itemContent},
-            #{itemImage}
+            #{itemImage},
+            #{itemImage2}
         )
     </insert>
 
@@ -70,6 +72,7 @@
              , ITEM_CATEGORY_ID
              , ITEM_TYPE_CD
              , ITEM_CONTENT
+             , ITEM_IMAGE_2
         FROM ITEM
         WHERE 1=1
             AND ITEM_TYPE_CD = #{itemTypeCd}

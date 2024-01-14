@@ -24,6 +24,7 @@ public class Item {
     private Timestamp updatedDt;
 
     private String itemImage;
+    private String itemImage2;
     private List<ItemImage> imageList;
 
     public void setImageList(List<ItemImage> imageList) {

@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    margin: 0 auto;
+    margin: 50px auto 0;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -28,6 +28,20 @@ body {
     box-sizing: border-box;
     text-align: center;
     background-color: #fff;
+
+}
+
+.item-wrapper {
+    width: 100%;
+    margin: 0px auto;
+    position: relative;
+}
+
+.jb-c {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
 }
 
 .item img {
@@ -35,9 +49,16 @@ body {
     height: auto;
 }
 
+.item-wrapper:hover .jb-c {
+    display: block;
+}
+
 .item-details {
     padding: 10px;
+    box-sizing: border-box;
 }
+
+
 
 .divider {
     display: flex;

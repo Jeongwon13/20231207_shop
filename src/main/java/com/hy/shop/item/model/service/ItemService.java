@@ -32,9 +32,16 @@ public class ItemService {
     public int insertItem(Map<String, Object> params, List<MultipartFile> imageList, String folderPath) throws IOException {
 
         String itemImageName = Util.fileRename(imageList.get(0).getOriginalFilename());
+        String itemImageName2 = Util.fileRename(imageList.get(1).getOriginalFilename());
 
-        String itemImage = "/src/main/resources/static/images/items/" + itemImageName;
+        log.info("itemImageName::::{} ", itemImageName);
+        log.info("itemImageName2::::{} ", itemImageName2);
+
+        String itemImage = "/images/items/" + itemImageName;
+        String itemImage2 = "/images/items/" + itemImageName2;
+
         params.put("itemImage", itemImage);
+        params.put("itemImage2", itemImage2);
         log.info("params:::: {} ", params);
         int itemId = itemMapper.insertItem(params);
 
@@ -49,12 +56,12 @@ public class ItemService {
         if (itemId > 0) {
             List<ItemImage> itemImageList = new ArrayList<>();
             List<String> reNameList = new ArrayList<>();
-
+            reNameList.add(itemImageName);
+            reNameList.add(itemImageName2);
+            log.info("reNameList::::@@@@@@@{}", reNameList);
 
             for (int i = 0; i < imageList.size(); i++) {
-
                 if (imageList.get(i).getSize() > 0) {
-
                     String reName = Util.fileRename(imageList.get(i).getOriginalFilename());
                     reNameList.add(reName);
 
@@ -73,11 +80,11 @@ public class ItemService {
                             .build();
 
 
-                    log.info("img::::{}", img);
+                    log.info("img::::{}", img.getImageReName());
 
                     itemImageList.add(img);
+                    log.info("imageReName::::{}", img.getImageReName());
 
-                    log.info("itemImageList::::{}", itemImageList);
 
                 }
             }

@@ -8,7 +8,10 @@
     <title>Item List</title>
     <link rel="stylesheet" href="/css/shopping.css">
     <link rel="stylesheet" href="/css/itemList.css">
-    
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-Gn5384xq1nqnIElUVZl5fT+U8LCzN+deTt1+Kb37GiU=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -17,6 +20,7 @@
 
 <body>
     <div th:replace="common/header :: HeaderFragment"></div>
+
 
     <div class="container">
 
@@ -32,19 +36,24 @@
         </div>
         <div class="item-list">
             <!-- Loop through the resultList and render each item -->
-            <div th:each="item : ${resultList}">
-                <div class="item">
-                    <a href="#">
+
+            <div th:each="item : ${resultList}" class="item">
+                <a href="#">
+                    <div class="item-wrapper">
                         <!-- Access item details from the Map and display them -->
-                        <img th:src="${item['ITEM_IMAGE']}" alt="Item Image" width="500px">
+                        <img th:src="${item['ITEM_IMAGE']}" alt="Item Image" class="jb-b">
+                        <img th:src="${item['ITEM_IMAGE_2']}" alt="Item Image" class="jb-c">
+
+                    </div>
                         <div class="item-details">
                             <h3 th:text="${item['ITEM_NAME']}">Item Name</h3>
                             <p th:text="'$' + ${item['ITEM_PRICE']}">Price</p>
                         </div>
-                    </a>
-                </div>
+                </a>
             </div>
+
         </div>
+
         <div class="divider">
             <a href="#">신상품순</a> 
             <a href="#">판매순</a> 
