@@ -2,6 +2,7 @@ package com.hy.shop.item.model.service;
 
 import com.hy.shop.commom.util.Util;
 import com.hy.shop.item.model.dao.ItemMapper;
+import com.hy.shop.item.model.vo.ItemCategory;
 import com.hy.shop.item.model.vo.ItemImage;
 import com.hy.shop.item.model.vo.ItemType;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,14 @@ public class ItemService {
         return itemMapper.selectOneItemType(itemTypeCd);
     }
 
-
+    /**
+     * 아이템 이미지 폴더에 파일 생성 및 경로 삽입
+     * @param params
+     * @param imageList
+     * @param folderPath
+     * @return
+     * @throws IOException
+     */
     @Transactional(rollbackFor = { Exception.class })
     public int insertItem(Map<String, Object> params, List<MultipartFile> imageList, String folderPath) throws IOException {
 
@@ -105,9 +113,22 @@ public class ItemService {
         return itemId;
     }
 
-
+    /**
+     * 화면에 뿌리기 위한 아이템 List
+     * @param itemTypeCd
+     * @return
+     */
     public List<Map<String, Object>> selectListItem(String itemTypeCd) {
         return itemMapper.selectListItem(itemTypeCd);
+    }
+
+    /**
+     * CategoryId 가져오기
+     * @param itemCategoryId
+     * @return
+     */
+    public List<ItemCategory> selectOneItemCategoryId(int itemCategoryId) {
+        return itemMapper.selectOneItemCategoryId(itemCategoryId);
     }
 }
 

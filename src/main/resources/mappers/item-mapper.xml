@@ -79,7 +79,15 @@
         ORDER BY ITEM_NO DESC;
     </select>
 
-
+    <select id="selectOneItemCategoryId" resultType="ItemCategory">
+        SELECT
+            ITEM_CATEGORY_ID,
+            ITEM_CATEGORY_NAME
+        FROM
+            ITEM_CATEGORY
+        WHERE 1=1
+          AND ITEM_CATEGORY_ID = #{itemCategoryId}
+    </select>
 
 </mapper>
 

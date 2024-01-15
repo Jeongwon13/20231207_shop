@@ -1,5 +1,6 @@
 package com.hy.shop.item.model.dao;
 
+import com.hy.shop.item.model.vo.ItemCategory;
 import com.hy.shop.item.model.vo.ItemImage;
 import com.hy.shop.item.model.vo.ItemType;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,7 +12,7 @@ import java.util.Map;
 public interface ItemMapper {
 
     List<ItemType> selectOneItemType(int itemTypeCd);
-
+    List<ItemCategory> selectOneItemCategoryId(int itemCategoryId);
 
     int insertItem(Map<String, Object> params);
     Long selectLastItemNo();

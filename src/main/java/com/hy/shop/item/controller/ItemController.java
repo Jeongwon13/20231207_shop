@@ -2,6 +2,7 @@ package com.hy.shop.item.controller;
 
 import com.hy.shop.item.model.service.ItemService;
 import com.hy.shop.item.model.vo.Item;
+import com.hy.shop.item.model.vo.ItemCategory;
 import com.hy.shop.item.model.vo.ItemType;
 import com.hy.shop.member.model.vo.Member;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,17 +35,21 @@ public class ItemController {
      * @param session
      * @return
      */
-    @GetMapping("/list/{itemTypeCode}")
-    public String itemList(@PathVariable(name = "itemTypeCode") int itemTypeCd, Model model, HttpSession session) {
+    @GetMapping("/list/{itemTypeCode}/{itemCategoryId}")
+    public String itemList(@PathVariable(name = "itemTypeCode") int itemTypeCd, Model model, HttpSession session, @PathVariable(name = "itemCategoryId") int itemCategoryId) {
         List<ItemType> itemOneTypeList = itemService.selectOneItemType(itemTypeCd);
+        List<ItemCategory> itemCategoryIdList = itemService.selectOneItemCategoryId(itemCategoryId);
         log.info("itemOneTypeList:::: {} ", itemOneTypeList);
         List<Map<String, Object>> resultList = itemService.selectListItem(String.valueOf(itemTypeCd));
         log.info("map::::{}", resultList);
         Member adminMember = (Member) session.getAttribute("loginMember");
         model.addAttribute("itemOneTypeList", itemOneTypeList);
+        model.addAttribute("itemCategoryIdList", itemCategoryIdList);
         model.addAttribute("adminMember", adminMember);
         model.addAttribute("resultList", resultList);
         log.info("adminMember:::: {} ", adminMember);
+        log.info("resultList:::: {} ", resultList);
+        log.info("itemCategoryIdList:::: {} ", itemCategoryIdList);
         return "item/itemList";
     }
 
