@@ -36,11 +36,15 @@ public class ItemController {
      * @return
      */
     @GetMapping("/list/{itemTypeCode}/{itemCategoryId}")
-    public String itemList(@PathVariable(name = "itemTypeCode") int itemTypeCd, Model model, HttpSession session, @PathVariable(name = "itemCategoryId") int itemCategoryId) {
-        List<ItemType> itemOneTypeList = itemService.selectOneItemType(itemTypeCd);
+    public String itemList(@PathVariable(name = "itemTypeCode") String itemTypeCd, Model model, HttpSession session,
+                           @PathVariable(name = "itemCategoryId") String itemCategoryId) {
+        List<ItemType> itemOneTypeList = itemService.selectOneItemType(Integer.parseInt(itemTypeCd));
         List<ItemCategory> itemCategoryIdList = itemService.selectOneItemCategoryId(itemCategoryId);
+
         log.info("itemOneTypeList:::: {} ", itemOneTypeList);
-        List<Map<String, Object>> resultList = itemService.selectListItem(String.valueOf(itemTypeCd));
+
+        List<Map<String, Object>> resultList = itemService.selectListItem(itemTypeCd, itemCategoryId);
+
         log.info("map::::{}", resultList);
         Member adminMember = (Member) session.getAttribute("loginMember");
         model.addAttribute("itemOneTypeList", itemOneTypeList);
@@ -115,7 +119,16 @@ public class ItemController {
         return "redirect:" + path;
     }
 
-
-
+    /** 
+     * 상세 페이지
+     */
+    @GetMapping("/list/{itemNo}")
+    public String selectOneItem(@PathVariable(name = "itemNo") String itemNo, Model model) {
+        log.info("itemNo:::{}", itemNo);
+        Map<String, Object> itemOne = itemService.selectOneItem(itemNo);
+        log.info("itemOne::::{}", itemOne);
+        model.addAttribute("itemOne", itemOne);
+        return "item/detailPage";
+    }
 
 }

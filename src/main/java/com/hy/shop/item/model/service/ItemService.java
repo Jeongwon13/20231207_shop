@@ -2,11 +2,13 @@ package com.hy.shop.item.model.service;
 
 import com.hy.shop.commom.util.Util;
 import com.hy.shop.item.model.dao.ItemMapper;
+import com.hy.shop.item.model.vo.Item;
 import com.hy.shop.item.model.vo.ItemCategory;
 import com.hy.shop.item.model.vo.ItemImage;
 import com.hy.shop.item.model.vo.ItemType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -115,11 +117,13 @@ public class ItemService {
 
     /**
      * 화면에 뿌리기 위한 아이템 List
+     *
      * @param itemTypeCd
+     * @param itemCategoryId
      * @return
      */
-    public List<Map<String, Object>> selectListItem(String itemTypeCd) {
-        return itemMapper.selectListItem(itemTypeCd);
+    public List<Map<String, Object>> selectListItem(@Param("itemTypeCd") String itemTypeCd, @Param("itemCategoryId") String itemCategoryId) {
+        return itemMapper.selectListItem(itemTypeCd, itemCategoryId);
     }
 
     /**
@@ -127,8 +131,18 @@ public class ItemService {
      * @param itemCategoryId
      * @return
      */
-    public List<ItemCategory> selectOneItemCategoryId(int itemCategoryId) {
+    public List<ItemCategory> selectOneItemCategoryId(String itemCategoryId) {
         return itemMapper.selectOneItemCategoryId(itemCategoryId);
+    }
+
+    /**
+     * item One 가져오기
+     * @param itemNo
+     * @return
+     */
+    public Map<String, Object> selectOneItem(String itemNo) {
+        log.info("itemNo::::{}", itemNo);
+        return itemMapper.selectOneItem(itemNo);
     }
 }
 

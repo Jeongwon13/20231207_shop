@@ -76,9 +76,11 @@
         FROM ITEM
         WHERE 1=1
             AND ITEM_TYPE_CD = #{itemTypeCd}
+            AND ITEM_CATEGORY_ID = #{itemCategoryId}
         ORDER BY ITEM_NO DESC;
     </select>
 
+    <!-- 카테고리 가져오기 -->
     <select id="selectOneItemCategoryId" resultType="ItemCategory">
         SELECT
             ITEM_CATEGORY_ID,
@@ -89,6 +91,21 @@
           AND ITEM_CATEGORY_ID = #{itemCategoryId}
     </select>
 
+    <!-- 해당 아이템 가져오기 -->
+    <select id="selectOneItem" resultType="java.util.Map">
+        SELECT ITEM_NO
+             , ITEM_PRICE
+             , ITEM_NAME
+             , ITEM_IMAGE
+             , STOCK_QUANTITY
+             , ITEM_CATEGORY_ID
+             , ITEM_TYPE_CD
+             , ITEM_CONTENT
+             , ITEM_IMAGE_2
+        FROM ITEM
+        WHERE 1=1
+            AND ITEM_NO = #{itemNo}
+    </select>
 </mapper>
 
 

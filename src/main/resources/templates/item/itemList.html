@@ -23,19 +23,21 @@
 
         <div class="item-list-container">
         <div th:each="itemType : ${itemOneTypeList}">
-            <p th:text="${itemType.itemTypeName} + ' > 상의'"></p>
+            <p th:text="${itemType.itemTypeName} + ' > ' + ${itemCategoryIdList[0].itemCategoryName}"></p>
+
             <button th:if="${adminMember != null and adminMember.auth == '0'}" onclick="openPopup('${itemType.itemTypeCode}')">
                 상품 등록
             </button>
-
         </div>
         </div>
         <div class="item-list">
             <!-- Loop through the resultList and render each item -->
 
             <div th:each="item : ${resultList}" class="item">
-                <a href="#">
-                    <div class="item-wrapper">
+                <a th:href="@{/item/list/{itemNo}(itemNo=${item['ITEM_NO']})}">
+
+
+                <div class="item-wrapper">
                         <!-- Access item details from the Map and display them -->
                         <img th:src="${item['ITEM_IMAGE']}" alt="Item Image" class="jb-b">
                         <img th:src="${item['ITEM_IMAGE_2']}" alt="Item Image" class="jb-c">
@@ -49,11 +51,10 @@
             </div>
 
         </div>
-
         <div class="divider">
-            <a href="#">신상품순</a> 
-            <a href="#">판매순</a> 
-            <a href="#">높은가격순</a> 
+            <a href="#">신상품순</a>
+            <a href="#">판매순</a>
+            <a href="#">높은가격순</a>
             <a href="#">낮은가격순</a>
 
         </div>

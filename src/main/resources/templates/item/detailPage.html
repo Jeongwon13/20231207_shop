@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/shopping.css">
+    <link rel="stylesheet" href="/css/itemList.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+</head>
+<body>
+<div th:replace="common/header :: HeaderFragment"></div>
+<div class="item">
+
+        <!-- Access item details from the Map and display them -->
+        <img th:src="${itemOne['ITEM_IMAGE']}" alt="Item Image" >
+        <img th:src="${itemOne['ITEM_IMAGE_2']}" alt="Item Image">
+
+
+        <h3 th:text="${itemOne['ITEM_NAME']}">Item Name</h3>
+        <p th:text="'$' + ${itemOne['ITEM_PRICE']}"></p>
+
+</div>
+
+
+
+<div th:replace="common/footer :: FooterFragment"></div>
+</body>
+</html>
