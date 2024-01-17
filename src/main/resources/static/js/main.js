@@ -13,3 +13,8 @@ $('#slider2').slick({
     autoplay: false, // 움직이지 않음
 });
 
+$('#slider3').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: false, // 움직이지 않음
+});

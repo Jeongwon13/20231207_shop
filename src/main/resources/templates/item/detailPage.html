@@ -5,29 +5,60 @@
     <title>Title</title>
     <link rel="stylesheet" href="/css/shopping.css">
     <link rel="stylesheet" href="/css/itemList.css">
-
+    <link rel="stylesheet" href="/css/detailPage.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
 </head>
 <body>
 <div th:replace="common/header :: HeaderFragment"></div>
-<div class="item">
 
-        <!-- Access item details from the Map and display them -->
-        <img th:src="${itemOne['ITEM_IMAGE']}" alt="Item Image" >
+<div class="details-container">
+    <div class="details-left">
+        <img th:src="${itemOne['ITEM_IMAGE']}" alt="Item Image">
         <img th:src="${itemOne['ITEM_IMAGE_2']}" alt="Item Image">
+    </div>
 
+    <div class="details-right">
+        <h1 th:text="'상품명: ' + ${itemOne['ITEM_NAME']}">상품명</h1>
+        <h3 th:text="'가격: '+${priceString} + '원'">가격</h3>
+        <h3 th:text="'설명: '+${itemOne['ITEM_CONTENT']}"></h3>
 
-        <h3 th:text="${itemOne['ITEM_NAME']}">Item Name</h3>
-        <p th:text="'$' + ${itemOne['ITEM_PRICE']}"></p>
+        <button onclick="decreaseQuantity()">-</button>
+        <input type="text" id="quantity" value="1" min="1" oninput="validateQuantity()" style="width: 20px;">
+        <button onclick="increaseQuantity()">+</button>
 
+        <button>장바구니</button>
+
+        <button>구매하기</button>
+
+    </div>
 </div>
 
+<script>
+    function increaseQuantity() {
+        var quantityElement = document.getElementById("quantity");
+        var currentQuantity = parseInt(quantityElement.value);
+        quantityElement.value = currentQuantity + 1;
+        validateQuantity();
+    }
 
+    function decreaseQuantity() {
+        var quantityElement = document.getElementById("quantity");
+        var currentQuantity = parseInt(quantityElement.value);
+        if (currentQuantity > 1) {
+            quantityElement.value = currentQuantity - 1;
+        }
+        validateQuantity();
+    }
 
-<div th:replace="common/footer :: FooterFragment"></div>
+    function validateQuantity() {
+        var quantityElement = document.getElementById("quantity");
+        if (quantityElement.value < 1) {
+            quantityElement.value = 1;
+        }
+    }
+</script>
 </body>
 </html>

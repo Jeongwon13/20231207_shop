@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.details-container {
+    display: flex;
+    margin: 5% 5%;
+}
+
+.details-left {
+    flex-basis: 60%;
+    display: flex;
+    flex-direction: column; /* 이미지가 상하로 나오도록 설정 */
+}
+
+.details-right {
+    flex-basis: 40%;
+    border: 1px solid red;
+
+}
+
+img {
+    width: 95%;
+    height: auto;
+}
+

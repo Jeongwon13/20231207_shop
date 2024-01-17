@@ -126,7 +126,10 @@ public class ItemController {
     public String selectOneItem(@PathVariable(name = "itemNo") String itemNo, Model model) {
         log.info("itemNo:::{}", itemNo);
         Map<String, Object> itemOne = itemService.selectOneItem(itemNo);
+        String priceString = String.format("%,d", Long.parseLong(String.valueOf(itemOne.get("ITEM_PRICE"))));
         log.info("itemOne::::{}", itemOne);
+        log.info("priceString::::{}", priceString);
+        model.addAttribute("priceString", priceString);
         model.addAttribute("itemOne", itemOne);
         return "item/detailPage";
     }
